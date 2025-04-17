@@ -7,3 +7,7 @@ edition = "2021"
 colored = "3.0.0"
 reqwest = { version = "0.12.15", features = ["blocking"] }
 scraper = "0.23.1"
+base64 = "0.22.1"
+crossterm = "0.29.0"
+image = "0.25.6"
+viuer = "0.9.1"
