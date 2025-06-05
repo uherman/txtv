@@ -1,13 +1,8 @@
 # Swedish text tv in the terminal
 
-#### SV
+A client for reading swedish text tv in the terminal for us who want to read the news without having to open the browser.
 
-För oss som vill läsa nyheterna utan att behöva öppna webbläsaren.
-
-#### EN
-
-For us who want to read the news without having to open the browser.
-
+![image of the tui](assets/screenshot.png)
 
 ## Prerequisites
 
@@ -17,7 +12,7 @@ For us who want to read the news without having to open the browser.
 
 More options coming soon.
 
-### Build from source
+### Build from source (requires [rust](https://rustup.rs/))
 
 ```sh
 $ git clone https://github.com/uherman/txtv.git
@@ -32,4 +27,9 @@ $ cp target/release/txtv ~/path/to/bin # usually ~/.local/bin
 $ txtv
 ```
 
-![image of the tui](assets/screenshot.png)
+### Controls
+
+- <- - Go to previous page
+- -> - Go to next page
+- g - go to a specific page
+- q - quit
