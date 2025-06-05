@@ -1,8 +1,15 @@
-# Swedish text tv in the terminal
+# Swedish Text TV in the Terminal
 
-A client for reading swedish text tv in the terminal for us who want to read the news without having to open the browser.
+A simple and fast terminal client for browsing Swedish Text TV — for us who prefer reading the news without launching a web browser.
+
+This project is inspired by the now-unmaintained [txtv by voidcase](https://github.com/voidcase/txtv), which no longer works. 
 
 ![image of the tui](assets/screenshot.png)
+
+## Features
+> 🗓️ Planned | ✅ Implemented
+- Display text tv pages as images ✅
+- Plaintext mode 🗓️
 
 ## Prerequisites
 
@@ -29,7 +36,8 @@ $ txtv
 
 ### Controls
 
-- <- - Go to previous page
-- -> - Go to next page
-- g - go to a specific page
-- q - quit
+- **`←`** Go to previous page
+- **`→`** Go to next page
+- `g` Go to a specific page
+- `q` Quit
+
