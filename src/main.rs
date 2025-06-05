@@ -100,6 +100,16 @@ fn prompt_goto(current: i32) -> Result<Option<i32>, Box<dyn Error>> {
     Ok(None)
 }
 
+/// Prints a message that indicates that the page does not exist.
+fn print_page_not_found(page: i32) -> () {
+    let _ = execute!(
+        io::stdout(),
+        style::SetForegroundColor(style::Color::Red),
+        style::Print(format!("Page {} not found\n", page)),
+        style::ResetColor,
+    );
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
     // hide cursor
     execute!(io::stdout(), cursor::Hide)?;
@@ -116,12 +126,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Initial render
     if let Err(_) = fetch_and_show(channel) {
-        execute!(
-            io::stdout(),
-            style::SetForegroundColor(style::Color::Red),
-            style::Print(format!("Page {} not found\n", channel)),
-            style::ResetColor,
-        )?;
+        print_page_not_found(channel);
     }
     print_status(channel)?;
 
@@ -135,12 +140,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                         channel = new_ch;
                         execute!(io::stdout(), Clear(ClearType::All), cursor::MoveTo(0, 0))?;
                         if let Err(_) = fetch_and_show(channel) {
-                            execute!(
-                                io::stdout(),
-                                style::SetForegroundColor(style::Color::Red),
-                                style::Print(format!("Page {} not found\n", channel)),
-                                style::ResetColor,
-                            )?;
+                            print_page_not_found(channel);
                         }
                         print_status(channel)?;
                     }
@@ -151,12 +151,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                         channel = new_ch;
                         execute!(io::stdout(), Clear(ClearType::All), cursor::MoveTo(0, 0))?;
                         if let Err(_) = fetch_and_show(channel) {
-                            execute!(
-                                io::stdout(),
-                                style::SetForegroundColor(style::Color::Red),
-                                style::Print(format!("Page {} not found\n", channel)),
-                                style::ResetColor,
-                            )?;
+                           print_page_not_found(channel); 
                         }
                         print_status(channel)?;
                     }
@@ -166,12 +161,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                         channel = new_ch;
                         execute!(io::stdout(), Clear(ClearType::All), cursor::MoveTo(0, 0))?;
                         if let Err(_) = fetch_and_show(channel) {
-                            execute!(
-                                io::stdout(),
-                                style::SetForegroundColor(style::Color::Red),
-                                style::Print(format!("Page {} not found\n", channel)),
-                                style::ResetColor,
-                            )?;
+                            print_page_not_found(channel);
                         }
                         print_status(channel)?;
                     }
