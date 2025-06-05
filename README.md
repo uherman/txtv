@@ -22,16 +22,23 @@ More options coming soon.
 ### Build from source (requires [rust](https://rustup.rs/))
 
 ```sh
-$ git clone https://github.com/uherman/txtv.git
-$ cd txtv
-$ cargo build --release
-$ cp target/release/txtv ~/path/to/bin # usually ~/.local/bin
+# Clone the repository
+git clone https://github.com/uherman/txtv.git
+cd txtv
+
+# Build and install (installs to ~/.cargo/bin/)
+cargo install --path .
+
+# Or build manually and copy to a folder of your choice
+cargo build --release
+cp target/release/txtv ~/path/to/bin/ # usually ~/.local/bin
 ```
 
 ## Usage
 
+Open the interface by running the following command
 ```sh
-$ txtv
+txtv
 ```
 
 ### Controls
