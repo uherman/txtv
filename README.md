@@ -17,7 +17,11 @@ This project is inspired by the now-unmaintained [txtv by voidcase](https://gith
 
 ## Installation
 
-More options coming soon.
+### Cargo (requires [rust](https://rustup.rs/))
+
+```sh
+cargo install txtv
+```
 
 ### Build from source (requires [rust](https://rustup.rs/))
 
