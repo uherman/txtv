@@ -4,6 +4,7 @@ use crossterm::{
     event::{read, Event, KeyCode, KeyEvent},
     execute, style,
     terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
+    terminal,
 };
 use scraper::{Html, Selector};
 use std::{
@@ -49,7 +50,11 @@ fn print_status(channel: i32) -> Result<(), Box<dyn Error>> {
 /// Prompt in raw mode for a new page number.
 fn prompt_goto(current: i32) -> Result<Option<i32>, Box<dyn Error>> {
     let mut input = String::new();
-    print!("\nGo to page (100–801): ");
+    execute!(
+        io::stdout(),
+        cursor::MoveToColumn(0)
+    )?;
+    print!("Go to page (100–801): ");
     io::stdout().flush()?;
 
     loop {
@@ -73,7 +78,12 @@ fn prompt_goto(current: i32) -> Result<Option<i32>, Box<dyn Error>> {
                 }
                 KeyCode::Enter => break,
                 KeyCode::Esc => {
-                    println!();
+                    execute!(
+                        io::stdout(),
+                        cursor::MoveToColumn(0),
+                        terminal::Clear(ClearType::CurrentLine),
+                    )?;
+                    io::stdout().flush()?;
                     return Ok(None);
                 }
                 _ => {}
@@ -81,7 +91,6 @@ fn prompt_goto(current: i32) -> Result<Option<i32>, Box<dyn Error>> {
         }
     }
 
-    println!();
     if let Ok(n) = input.parse::<i32>() {
         let page = n.clamp(100, 801);
         if page != current {
