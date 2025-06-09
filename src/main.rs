@@ -14,6 +14,12 @@ use std::{
 };
 use viuer::Config;
 
+/// Represents a page direction.
+enum PageDirection {
+    Next,
+    Prev
+}
+
 /// Fetches & displays the given page image inline.
 fn fetch_and_show(channel: i32) -> Result<(), Box<dyn Error>> {
     let url = format!("https://www.svt.se/text-tv/{}", channel);
@@ -31,6 +37,24 @@ fn fetch_and_show(channel: i32) -> Result<(), Box<dyn Error>> {
     };
     viuer::print(&img, &config)?;
     Ok(())
+}
+
+/// Get the page number for the specified page direction.
+fn get_page_number(document: Html, page: PageDirection) -> Result<i32, Box<dyn Error>> {
+    let selector = match page {
+        PageDirection::Next => Selector::parse("[title='Nästa sida']")?,
+        PageDirection::Prev => Selector::parse("[title='Förra sidan']")?,
+    };
+
+    let element = document.select(&selector).next().ok_or("Failed to fetch page number")?;
+    let href = element.value().attr("href").unwrap();
+
+    let parts : Vec<&str> = href.split('/').collect();
+    let page : i32 = parts.last().unwrap().parse().unwrap();
+
+    println!("{}", page);
+
+    Ok(page)
 }
 
 /// Prints the status line below the image, aligned to left.
@@ -135,6 +159,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         if let Event::Key(KeyEvent { code, .. }) = read()? {
             match code {
                 KeyCode::Left => {
+                    // TODO: Implement get_page_number
                     let new_ch = (channel - 1).max(100);
                     if new_ch != channel {
                         channel = new_ch;
@@ -146,6 +171,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                     }
                 }
                 KeyCode::Right => {
+                    // TODO: Implement get_page_number
                     let new_ch = (channel + 1).min(801);
                     if new_ch != channel {
                         channel = new_ch;
@@ -176,4 +202,29 @@ fn main() -> Result<(), Box<dyn Error>> {
     disable_raw_mode()?;
     execute!(io::stdout(), cursor::Show)?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    const PAGE_NUMBERS_HTML: &str = "
+        <a class=\"NavigationArrow_enabled__ueMbi NavigationArrow_navigationArrow__eaKzk\" title=\"Nästa sida\" href=\"/text-tv/103\"></a>
+        <a class=\"NavigationArrow_enabled__ueMbi NavigationArrow_navigationArrow__eaKzk\" title=\"Förra sidan\" href=\"/text-tv/101\"></a>
+        ";
+
+    #[test]
+    fn get_page_number_returns_next_page() {
+        let document = Html::parse_document(&PAGE_NUMBERS_HTML);
+        let next_page = get_page_number(document, PageDirection::Next).unwrap();
+
+        assert_eq!(next_page, 103);
+    }
+
+    #[test]
+    fn get_page_number_returns_prev_page() {
+        let document = Html::parse_document(&PAGE_NUMBERS_HTML);
+        let prev_page = get_page_number(document, PageDirection::Prev).unwrap();
+
+        assert_eq!(prev_page, 101);
+    }
 }
