@@ -146,8 +146,6 @@ fn main() -> Result<(), Box<dyn Error>> {
                     if let Ok(new_page) = page.prev_page() {
                         page = new_page;
                         print_status(page.channel())?;
-                    } else {
-                        print_page_not_found(page.channel());
                     }
                 }
 
@@ -155,8 +153,6 @@ fn main() -> Result<(), Box<dyn Error>> {
                     if let Ok(new_page) = page.next_page() {
                         page = new_page;
                         print_status(page.channel())?;
-                    } else {
-                        print_page_not_found(page.channel());
                     }
                 }
 
