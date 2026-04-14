@@ -83,7 +83,46 @@ fn print_page_not_found(page: Channel) {
     );
 }
 
+fn print_version() {
+    println!("txtv {}", env!("CARGO_PKG_VERSION"));
+}
+
+fn print_help() {
+    print_version();
+    println!();
+    println!("{}", env!("CARGO_PKG_DESCRIPTION"));
+    println!();
+    println!("Usage: txtv [PAGE]");
+    println!();
+    println!("Arguments:");
+    println!("  [PAGE]  Page number to open (100–801) [default: 100]");
+    println!();
+    println!("Options:");
+    println!("  -h, --help     Print help");
+    println!("  -v, --version  Print version");
+    println!();
+    println!("Keybindings:");
+    println!("  ←        Previous page");
+    println!("  →        Next page");
+    println!("  g        Go to a specific page");
+    println!("  q        Quit");
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
+    if let Some(arg) = env::args().nth(1) {
+        match arg.as_str() {
+            "-v" | "--version" => {
+                print_version();
+                return Ok(());
+            }
+            "-h" | "--help" => {
+                print_help();
+                return Ok(());
+            }
+            _ => {}
+        }
+    }
+
     execute!(io::stdout(), cursor::Hide)?;
 
     // Load initial channel from args, or default to min.
