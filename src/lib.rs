@@ -159,6 +159,9 @@ impl TextTvPage {
     }
 
     pub fn next_page(&self) -> Result<Self, Box<dyn Error>> {
+        if self.next == self.channel {
+            return Err("Already at the last page".into());
+        }
         self.clear_screen()?;
         let page = Self::fetch(self.next)?;
         page.show()?;
@@ -166,6 +169,9 @@ impl TextTvPage {
     }
 
     pub fn prev_page(&self) -> Result<Self, Box<dyn Error>> {
+        if self.prev == self.channel {
+            return Err("Already at the first page".into());
+        }
         self.clear_screen()?;
         let page = Self::fetch(self.prev)?;
         page.show()?;
