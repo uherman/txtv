@@ -1,6 +1,6 @@
 [package]
 name = "txtv"
-version = "1.0.5"
+version = "1.1.0"
 edition = "2021"
 license = "MIT"
 description = "A simple and fast terminal client for browsing Swedish Text TV"
