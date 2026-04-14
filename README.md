@@ -9,7 +9,7 @@ This project is inspired by the now-unmaintained [txtv by voidcase](https://gith
 ## Features
 > 🗓️ Planned | ✅ Implemented
 - Display text tv pages as images ✅
-- Plaintext mode 🗓️
+- Plaintext mode ✅
 
 ## Prerequisites
 
@@ -44,6 +44,26 @@ Open the interface by running the following command
 ```sh
 txtv
 ```
+
+Open a specific page
+```sh
+txtv 130
+```
+
+Use text mode (no image protocol required)
+```sh
+txtv --mode text
+# or
+txtv -m text
+```
+
+### Options
+
+| Flag | Description |
+|------|-------------|
+| `-m, --mode <MODE>` | Render mode: `image` (default) or `text` |
+| `-h, --help` | Print help |
+| `-v, --version` | Print version |
 
 ### Controls
 

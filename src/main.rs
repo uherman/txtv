@@ -9,7 +9,58 @@ use std::{
     error::Error,
     io::{self, Write},
 };
+use txtv::text_renderer::TextTvTextPage;
 use txtv::{Channel, TextTvPage, MIN_PAGE};
+
+enum Page {
+    Image(TextTvPage),
+    Text(TextTvTextPage),
+}
+
+impl Page {
+    fn fetch_image(channel: Channel) -> Result<Self, Box<dyn Error>> {
+        Ok(Page::Image(TextTvPage::fetch(channel)?))
+    }
+
+    fn fetch_text(channel: Channel) -> Result<Self, Box<dyn Error>> {
+        Ok(Page::Text(TextTvTextPage::fetch(channel)?))
+    }
+
+    fn show(&self) -> Result<(), Box<dyn Error>> {
+        match self {
+            Page::Image(p) => p.show(),
+            Page::Text(p) => p.show(),
+        }
+    }
+
+    fn next_page(&self) -> Result<Self, Box<dyn Error>> {
+        match self {
+            Page::Image(p) => Ok(Page::Image(p.next_page()?)),
+            Page::Text(p) => Ok(Page::Text(p.next_page()?)),
+        }
+    }
+
+    fn prev_page(&self) -> Result<Self, Box<dyn Error>> {
+        match self {
+            Page::Image(p) => Ok(Page::Image(p.prev_page()?)),
+            Page::Text(p) => Ok(Page::Text(p.prev_page()?)),
+        }
+    }
+
+    fn channel(&self) -> Channel {
+        match self {
+            Page::Image(p) => p.channel(),
+            Page::Text(p) => p.channel(),
+        }
+    }
+
+    fn clear_screen(&self) -> Result<(), Box<dyn Error>> {
+        match self {
+            Page::Image(p) => p.clear_screen(),
+            Page::Text(p) => p.clear_screen(),
+        }
+    }
+}
 
 /// Prints the status line below the image, aligned to left.
 fn print_status(channel: Channel) -> Result<(), Box<dyn Error>> {
@@ -92,12 +143,13 @@ fn print_help() {
     println!();
     println!("{}", env!("CARGO_PKG_DESCRIPTION"));
     println!();
-    println!("Usage: txtv [PAGE]");
+    println!("Usage: txtv [OPTIONS] [PAGE]");
     println!();
     println!("Arguments:");
     println!("  [PAGE]  Page number to open (100–801) [default: 100]");
     println!();
     println!("Options:");
+    println!("  -m, --mode <MODE>  Render mode: image (default) or text");
     println!("  -h, --help     Print help");
     println!("  -v, --version  Print version");
     println!();
@@ -109,8 +161,14 @@ fn print_help() {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    if let Some(arg) = env::args().nth(1) {
-        match arg.as_str() {
+    let args: Vec<String> = env::args().skip(1).collect();
+
+    let mut text_mode = false;
+    let mut page_num: Option<i32> = None;
+
+    let mut i = 0;
+    while i < args.len() {
+        match args[i].as_str() {
             "-v" | "--version" => {
                 print_version();
                 return Ok(());
@@ -119,20 +177,36 @@ fn main() -> Result<(), Box<dyn Error>> {
                 print_help();
                 return Ok(());
             }
-            _ => {}
+            "-m" | "--mode" => {
+                if let Some(val) = args.get(i + 1) {
+                    if val == "text" {
+                        text_mode = true;
+                    }
+                    i += 1;
+                }
+            }
+            other => {
+                if let Ok(n) = other.parse::<i32>() {
+                    page_num = Some(n);
+                }
+            }
         }
+        i += 1;
     }
 
     execute!(io::stdout(), cursor::Hide)?;
 
-    // Load initial channel from args, or default to min.
-    let channel = env::args()
-        .nth(1)
-        .and_then(|s| s.parse::<i32>().ok())
+    let channel = page_num
         .map(Channel::new)
         .unwrap_or_else(|| Channel::new(MIN_PAGE));
 
-    let mut page = TextTvPage::fetch(channel)?;
+    let fetch = if text_mode {
+        Page::fetch_text
+    } else {
+        Page::fetch_image
+    };
+
+    let mut page = fetch(channel)?;
     page.clear_screen()?;
     page.show()?;
     print_status(page.channel())?;
@@ -159,7 +233,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 KeyCode::Char('g') => {
                     if let Some(target_channel) = prompt_goto()? {
                         page.clear_screen()?;
-                        if let Ok(new_page) = TextTvPage::fetch(target_channel) {
+                        if let Ok(new_page) = fetch(target_channel) {
                             page = new_page;
                             page.show()?;
                             print_status(page.channel())?;
