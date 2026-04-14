@@ -149,7 +149,7 @@ fn print_help() {
     println!("  [PAGE]  Page number to open (100–801) [default: 100]");
     println!();
     println!("Options:");
-    println!("  --mode <MODE>  Render mode: image (default) or text");
+    println!("  -m, --mode <MODE>  Render mode: image (default) or text");
     println!("  -h, --help     Print help");
     println!("  -v, --version  Print version");
     println!();
@@ -177,7 +177,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 print_help();
                 return Ok(());
             }
-            "--mode" => {
+            "-m" | "--mode" => {
                 if let Some(val) = args.get(i + 1) {
                     if val == "text" {
                         text_mode = true;
