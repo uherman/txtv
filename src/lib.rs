@@ -1,3 +1,5 @@
+pub mod text_renderer;
+
 use base64::{engine::general_purpose, Engine as _};
 use crossterm::{
     cursor, execute,
