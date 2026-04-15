@@ -4,7 +4,16 @@ A simple and fast terminal client for browsing Swedish Text TV — for us who pr
 
 This project is inspired by the now-unmaintained [txtv by voidcase](https://github.com/voidcase/txtv), which no longer works. 
 
-![image of the tui](assets/screenshot.png)
+<table>
+  <tr>
+    <td align="center"><strong>Image mode</strong></td>
+    <td align="center"><strong>Text mode</strong></td>
+  </tr>
+  <tr>
+    <td><img src="assets/screenshot.png" alt="image of the tui" width="500"/></td>
+    <td><img src="assets/text-mode.png" alt="image of the tui in text mode" widht="500" /></td>
+  </tr>
+</table>
 
 ## Features
 > 🗓️ Planned | ✅ Implemented
