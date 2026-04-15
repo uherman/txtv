@@ -11,7 +11,7 @@ This project is inspired by the now-unmaintained [txtv by voidcase](https://gith
   </tr>
   <tr>
     <td><img src="assets/screenshot.png" alt="image of the tui" width="500"/></td>
-    <td><img src="assets/text-mode.png" alt="image of the tui in text mode" widht="500" /></td>
+    <td><img src="assets/text-mode.png" alt="image of the tui in text mode" widht="600" /></td>
   </tr>
 </table>
 
